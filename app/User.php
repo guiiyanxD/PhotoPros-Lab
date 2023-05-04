@@ -29,6 +29,14 @@ class User extends Authenticatable
         return $this->localId;
     }
 
+    public function fullName(){
+        return $this->name . ' ' . $this->lastname;
+    }
+
+    public function getName(){
+        return 'name';
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *

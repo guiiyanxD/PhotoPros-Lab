@@ -86,13 +86,13 @@ class RegisterController extends Controller
             ];
             $userFirestorProperties = [
                 'fname' => $request['name'],
-                'lname' => $request['lname'],
+                'lname' => $request['lastname'],
                 'bday'  => $birthday,
                 'created_at'  => new \DateTime(now()),
             ];
             $authUser = $this->auth->createUser($userAuthProperties);
             $this->db->collection('users')->document($authUser->uid)->set($userFirestorProperties);
-            return redirect()->route('login');
+            return redirect()->route('welcome');
         }catch (FirebaseException $e){
             Session::flash('error', $e->getMessage());
             return back()->withInput();

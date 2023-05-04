@@ -13,9 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::domain('photographer.'. env('APP_URL'))->group( function (){
+    Route::get('/login', function (){
+        return 'Second subdomain landing page';
+    });
+});
+
 Route::get('/', function () {
     return view('welcome');
-})->name('welcome');
+})->name('welcome')->middleware('guest');
 
 Auth::routes();
 
