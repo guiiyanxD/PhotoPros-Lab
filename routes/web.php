@@ -30,20 +30,19 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('/register/ph', function(){
-    return view('auth.registerph');
-})->name('registerph.view');
-
-
-Route::get('/become/ph', function(){
-    return view('auth.becomeph');
-})->name('becomeph.view');
-
-
+Route::get('/register/ph', [\App\Http\Controllers\Auth\RegisterController::class,'registerPh'])
+    ->name('registerph.view');
+Route::get('/become/ph', [\App\Http\Controllers\Auth\RegisterController::class,'becomePh'])
+    ->name('becomeph.view');
 Route::get('photographer/home', 'PhController@index')
     ->name('photographer.home');
 
+Route::get('upload/profile-picture',[\App\Http\Controllers\UserController::class,'uploadImageView'])
+    ->name('user.upload_profile_picture.view');
+Route::post('upload/profile-picture/doing',[\App\Http\Controllers\UserController::class,'uploadImage'])
+    ->name('user.upload_profile_picture');
 
-Route::get('/events', 'EventController@index')->name('event.index');
-Route::get('/events/create', 'EventController@create')->name('event.create');
+Route::get('/events', 'EventController@index')
+    ->name('event.index');
+Route::get('/events/create', 'EventController@create')
+    ->name('event.create');

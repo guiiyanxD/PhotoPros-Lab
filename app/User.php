@@ -13,6 +13,12 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * Attribute that counts how many profile pictures the user has
+     * Each user only have to has max 3 images
+     * @var int
+     */
+    protected static $countImages = 0;
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -22,6 +28,14 @@ class User extends Authenticatable
         'birthday', 'created_at','is_photographer','categories',
         'preference','price','telefono'
     ];
+
+    public static function incCountImages(){
+        return self::$countImages = self::$countImages++;
+    }
+    public static function getCountImages()
+    {
+        return self::$countImages;
+    }
 
     public function getAuthIdentifierName() {
         return 'localId';

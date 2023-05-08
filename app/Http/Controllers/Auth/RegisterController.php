@@ -63,8 +63,12 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function registerPh(Request $request){
-        return dd($request);
+    public function registerPh(){
+        return view('auth.registerph');
+    }
+
+    public function becomePh(){
+        return view('auth.becomeph');
     }
 
     /**
