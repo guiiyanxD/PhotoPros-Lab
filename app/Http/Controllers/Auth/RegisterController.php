@@ -4,14 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Carbon\Carbon;
-use Facade\Ignition\Exceptions\ViewException;
-use Google\Cloud\Core\Timestamp;
-use Google\Type\Date;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Kreait\Firebase\Auth as FirebaseAuth;
@@ -68,6 +63,10 @@ class RegisterController extends Controller
         ]);
     }
 
+    public function registerPh(Request $request){
+        return dd($request);
+    }
+
     /**
      * Create a new user instance after a valid registration.
      *
@@ -77,21 +76,59 @@ class RegisterController extends Controller
     protected function register(Request $request)
     {
         try {
+//            $userFirestorProperties = [];
             $birthday = $this->mutateData($request->bday);
-//            $this->validator($request->all())->validate();
+            $categories = $this->SetCategories($request->categories);
             $userAuthProperties = [
                 'email' => $request['email'],
                 'password' => $request['password'],
                 'emailVerified' => false,
             ];
-            $userFirestorProperties = [
-                'fname' => $request['name'],
-                'lname' => $request['lastname'],
-                'bday'  => $birthday,
-                'created_at'  => new \DateTime(now()),
-            ];
-            $authUser = $this->auth->createUser($userAuthProperties);
-            $this->db->collection('users')->document($authUser->uid)->set($userFirestorProperties);
+
+
+            if( $request->has('newph&user')) {
+                $userFirestorProperties = [
+                    'fname' => $request['name'],
+                    'lname' => $request['lastname'],
+                    'bday' => $birthday,
+                    'created_at' => new \DateTime(now()),
+                    'is_photographer' => true,
+                    'telefono' => $request['telefono'],
+                    'price' => $request['price'],
+                    'preference' => $request->has('preference'),
+                    'categories' => $categories,
+                ];
+            }elseif($request->has('become')){
+                $userFirestorProperties = [
+                    'is_photographer' => true,
+                    'telefono' => $request['telefono'],
+                    'price' => $request['price'],
+                    'preference' => $request->has('preference'),
+                    'categories' => $categories,
+                ];
+            }else{
+                $userFirestorProperties = [
+                    'fname' => $request['name'],
+                    'lname' => $request['lastname'],
+                    'bday'  => $birthday,
+                    'created_at'  => new \DateTime(now()),
+                ];
+            }
+
+            if($request->has('become')){
+                $signInResult = $this->auth->signInWithEmailAndPassword($request['email'], $request['password']);
+                $user = $this->db->collection('users')->document($signInResult->firebaseUserId());
+                $user->update([
+                    ['path' => 'is_photographer', 'value' => true],
+                    ['path' => 'telefono', 'value' => $request['telefono']],
+                    ['path' => 'price', 'value' => $request['price']],
+                    ['path' => 'preference', 'value' => $request->has('preference')],
+                    ['path' => 'categories', 'value' => $categories],
+                ]);
+            }else{
+                $authUser = $this->auth->createUser($userAuthProperties);
+                $this->db->collection('users')->document($authUser->uid)->set($userFirestorProperties);
+            }
             return redirect()->route('welcome');
         }catch (FirebaseException $e){
             Session::flash('error', $e->getMessage());
@@ -102,8 +139,10 @@ class RegisterController extends Controller
     protected function mutateData($birthday){
         $date = new \DateTime($birthday, new \DateTimeZone('America/Caracas'));
         return $date;
+    }
 
-
-
+    protected function setCategories($categories){
+        $array = explode(',',$categories);
+        return $array;
     }
 }

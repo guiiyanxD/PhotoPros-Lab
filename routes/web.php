@@ -13,11 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::domain('photographer.'. env('APP_URL'))->group( function (){
-    Route::get('/login', function (){
+/*Route::domain('photographer.'. env('APP_URL'))->group( function (){
+    Route::get('login', function (){
         return 'Second subdomain landing page';
     });
-});
+});*/
+
+
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,3 +30,20 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/register/ph', function(){
+    return view('auth.registerph');
+})->name('registerph.view');
+
+
+Route::get('/become/ph', function(){
+    return view('auth.becomeph');
+})->name('becomeph.view');
+
+
+Route::get('photographer/home', 'PhController@index')
+    ->name('photographer.home');
+
+
+Route::get('/events', 'EventController@index')->name('event.index');
+Route::get('/events/create', 'EventController@create')->name('event.create');

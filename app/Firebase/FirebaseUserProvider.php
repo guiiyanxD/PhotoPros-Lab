@@ -19,16 +19,39 @@ class FirebaseUserProvider implements UserProvider {
   }
   public function retrieveById($identifier) {
     $firebaseUser = $this->auth->getUser($identifier);
-    $userInfo = $this->firestoreUser->collection('users')->document($firebaseUser->uid)->snapshot()->data();
-    $user = new User([
-        'localId' => $firebaseUser->uid,
-        'email' => $firebaseUser->email,
-        'displayName' => $firebaseUser->displayName,
-        'name' => $userInfo['fname'],
-        'lastname'=> $userInfo['lname'],
-        'birthday'=> $userInfo['bday'],
-        'created_at' => $userInfo['created_at'],
-    ]);
+    $userInfo = $this->firestoreUser
+        ->collection('users')
+        ->document($firebaseUser->uid)
+        ->snapshot()
+        ->data();
+    if( array_key_exists('is_photographer',$userInfo)){
+        $user = new User([
+            'localId' => $firebaseUser->uid,
+            'email' => $firebaseUser->email,
+            'displayName' => $firebaseUser->displayName,
+            'name' => $userInfo['fname'],
+            'lastname'=> $userInfo['lname'],
+            'birthday'=> $userInfo['bday'],
+            'created_at' => $userInfo['created_at'],
+            'telefono' => $userInfo['telefono'],
+            'price' => $userInfo['price'],
+            'categories' => $userInfo['categories'],
+            'preference' => $userInfo['preference'],
+            'is_photographer' => $userInfo['is_photographer'],
+        ]);
+
+    }else{
+        $user = new User([
+            'localId' => $firebaseUser->uid,
+            'email' => $firebaseUser->email,
+            'displayName' => $firebaseUser->displayName,
+            'name' => $userInfo['fname'],
+            'lastname'=> $userInfo['lname'],
+            'birthday'=> $userInfo['bday'],
+            'created_at' => $userInfo['created_at'],
+        ]);
+    }
+
     return $user;
   }
   public function retrieveByToken($identifier, $token) {}

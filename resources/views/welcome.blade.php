@@ -3,19 +3,7 @@
 @section('content')
 
     <div class="flex-center position-ref full-height">
-        {{--@if (Route::has('login'))
-            <div class="top-right links">
-                @auth
-                    <a href="{{ url('/home') }}">Home</a>
-                @else
-                    <a href="{{ route('login') }}">Login</a>
 
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}">Register</a>
-                    @endif
-                @endauth
-            </div>
-        @endif--}}
         <div class="container">
             <div class="row justify-content-center mt-4 mb-4">
                 <h1 style="font-family:Bahnschrift"> Que bueno verte de nuevo!</h1>
@@ -25,6 +13,7 @@
                     <form method="POST" action="{{route('login')}}">
                         @csrf
                         <h3 style="font-family:Bahnschrift">Asistente</h3>
+                        <input type="hidden" id="attendant" name="attendant">
                         <div class="form-group">
                             <input id="email" name="email" type="text" class="form-control @error('email') is-invalid @enderror" placeholder="Correo electronico" required autofocus />
                             @error('email')
@@ -52,18 +41,33 @@
                 </div>
                 <div class="col-md-6 login-form-2">
                     <form method="POST" action="{{route('login')}}">
+                        @csrf
                         <h3 style="font-family:Bahnschrift">Fotografo</h3>
+                        <input type="hidden" id="photographer" name="photographer">
                         <div class="form-group">
-                            <input id="email" name="password" type="text" class="form-control" placeholder="Correo electronico" value="" />
+                            <input id="email" name="email" type="text" class="form-control @error('email') is-invalid @enderror"  placeholder="Correo electronico" />
+                            @error('email')
+                            <span class="invalid-feedback" style="color: whitesmoke" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                            @enderror
                         </div>
                         <div class="form-group">
-                            <input id="email" name="password" type="password" class="form-control" placeholder="Contraseña" value="" />
+                            <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Contraseña" />
+                            @error('password')
+                            <span class="invalid-feedback" style="color: whitesmoke" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
                         <div class="form-group">
-                            <input type="submit" class="btnSubmit" value="Login" />
+                            <button type="submit" class="btnSubmit">Login </button>
                         </div>
                         <div class="form-group">
-                            <a style="color: whitesmoke" type="button" href="{{route('register')}}" class="btnForgetPwd">No tienes cuenta? Registrate</a>
+                            <a style="color: whitesmoke" type="button" href="{{ route('registerph.view') }}" class="btnForgetPwd">No tienes cuenta? Registrate</a>
+                        </div>
+                        <div class="form-group">
+                            <a style="color: whitesmoke" type="button" href="{{route('becomeph.view')}}" class="btnForgetPwd">Ya tienes cuenta de asistente? Completa tu perfil</a>
                         </div>
                     </form>
                 </div>

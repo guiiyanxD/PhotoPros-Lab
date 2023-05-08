@@ -18,7 +18,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'displayName', 'email', 'localId','name', 'lastname', 'birthday', 'created_at'
+        'displayName', 'email', 'localId','name', 'lastname',
+        'birthday', 'created_at','is_photographer','categories',
+        'preference','price','telefono'
     ];
 
     public function getAuthIdentifierName() {
