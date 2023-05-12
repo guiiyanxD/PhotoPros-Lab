@@ -105,7 +105,9 @@
                     </div>
                 </div>
             </div>
-            @foreach( $events as $doc)
+            ///TODO: He llegado hasta enviar solicitudes de trabajo a los fotografos, configurando y actualizando las credenciales de aws s3 y firebase el proyecto funciona. Falta configurar el reconocimiento facial de amazon rekognition
+
+        @foreach( $events as $doc)
             <div class="col-md-4 mt-4">
                 <div class="card" style="">
                     <div class="card-body">
