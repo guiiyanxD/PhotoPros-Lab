@@ -29,7 +29,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'UserController@index')->name('home');
 Route::get('/register/ph', [\App\Http\Controllers\Auth\RegisterController::class,'registerPh'])
     ->name('registerph.view');
 Route::get('/become/ph', [\App\Http\Controllers\Auth\RegisterController::class,'becomePh'])
@@ -40,9 +40,27 @@ Route::get('photographer/home', 'PhController@index')
 Route::get('upload/profile-picture',[\App\Http\Controllers\UserController::class,'uploadImageView'])
     ->name('user.upload_profile_picture.view');
 Route::post('upload/profile-picture/doing',[\App\Http\Controllers\UserController::class,'uploadImage'])
-    ->name('user.upload_profile_picture');
+->name('user.upload_profile_picture');
+
+Route::get('/ph/hire', [\App\Http\Controllers\PhController::class,'hire'])
+    ->name('ph.hire');
+
+
 
 Route::get('/events', 'EventController@index')
     ->name('event.index');
 Route::get('/events/create', 'EventController@create')
     ->name('event.create');
+Route::post('/events/store',[\App\Http\Controllers\EventController::class,'store'])
+    ->name('event.store');
+/*Route::post('/events/join', [\App\Http\Controllers\EventController::class,'addAttendantByCodeInvitation'])
+    ->name('event.join');*/
+Route::post('/events/join', [\App\Http\Controllers\EventController::class,'addAttendantByCodeInvitation'])
+    ->name('event.join');
+Route::get('/events/show/host/{id}', [\App\Http\Controllers\EventController::class,'showEventifHost'])
+    ->name('event.show.host');
+Route::get('/events/show/{id}', [\App\Http\Controllers\EventController::class,'showEventifAssistant'])
+    ->name('event.show.attendant');
+
+
+//Route::get('aux/ph/profile', [\App\Http\Controllers\PhController::class,'updateNoProfilePicture']);

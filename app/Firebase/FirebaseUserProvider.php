@@ -38,6 +38,7 @@ class FirebaseUserProvider implements UserProvider {
             'categories' => $userInfo['categories'],
             'preference' => $userInfo['preference'],
             'is_photographer' => $userInfo['is_photographer'],
+//            'profile_picture_path' => '',
         ]);
 
     }else{
@@ -49,6 +50,7 @@ class FirebaseUserProvider implements UserProvider {
             'lastname'=> $userInfo['lname'],
             'birthday'=> $userInfo['bday'],
             'created_at' => $userInfo['created_at'],
+//            'profile_picture_path' => '',
         ]);
     }
 

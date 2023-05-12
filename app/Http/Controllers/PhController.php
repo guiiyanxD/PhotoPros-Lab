@@ -3,44 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Kreait\Firebase\Auth as FirebaseAuth;
 
 class PhController extends Controller
 {
     protected $auth;
     protected $db;
-    public function __construct(FirebaseAuth $auth)
+    public function __construct()
     {
-        $this->middleware('photographer');
-        $this->auth = $auth;
-        $this->db = app('firebase.firestore');
+        $this->middleware('auth');
+        $this->db = app('firebase.firestore')->database();
     }
 
     public function index(){
         return view('photographer.home');
     }
 
-    /*public function register(Request $request){
+    public function hire(){
+        $phs = $this->db->collection('users')
+            ->where('is_photographer', '==', true)->documents()->rows();
 
-        $birthday = $this->mutateData($request->bday);
-        $userAuthProperties = [
-            'email' => $request['email'],
-            'password' => $request['password'],
-            'emailVerified' => false,
-        ];
-        $userFirestorProperties = [
-            'fname' => $request['name'],
-            'lname' => $request['lastname'],
-            'bday'  => $birthday,
-            'created_at'  => new \DateTime(now()),
-        ];
-
-        return dd($request, $request->path(),$request->is('register'));
+        return view('photographer.hire', compact('phs'));
     }
 
-    protected function login(Request $request){
-        $signInResult = $this->auth->signInWithEmailAndPassword($request['email'], $request['password']);
-        $ph = new Photographer();
-    }*/
+
+
+
+
 
 }

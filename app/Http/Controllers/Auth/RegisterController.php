@@ -101,6 +101,7 @@ class RegisterController extends Controller
                     'price' => $request['price'],
                     'preference' => $request->has('preference'),
                     'categories' => $categories,
+                    'profile_picture_path' => '',
                 ];
             }elseif($request->has('become')){
                 $userFirestorProperties = [
@@ -116,6 +117,7 @@ class RegisterController extends Controller
                     'lname' => $request['lastname'],
                     'bday'  => $birthday,
                     'created_at'  => new \DateTime(now()),
+                    'profile_picture_path' => '',
                 ];
             }
 

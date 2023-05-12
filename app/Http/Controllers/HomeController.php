@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-
+//        return ddd($this);
         return view('home');
     }
 }

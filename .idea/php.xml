@@ -140,6 +140,9 @@
       <path value="$PROJECT_DIR$/vendor/google/grpc-gcp" />
       <path value="$PROJECT_DIR$/vendor/google/gax" />
       <path value="$PROJECT_DIR$/vendor/google/common-protos" />
+      <path value="$PROJECT_DIR$/vendor/aws/aws-sdk-php" />
+      <path value="$PROJECT_DIR$/vendor/aws/aws-crt-php" />
+      <path value="$PROJECT_DIR$/vendor/league/flysystem-aws-s3-v3" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />

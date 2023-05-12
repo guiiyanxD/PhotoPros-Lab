@@ -19,7 +19,7 @@ class User extends Authenticatable
      */
     protected static $countImages = 0;
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are mass assignable
      *
      * @var array
      */
@@ -29,12 +29,21 @@ class User extends Authenticatable
         'preference','price','telefono'
     ];
 
+    public $no_profile_picture = 'holders/no_profile_picture.png';
+
     public static function incCountImages(){
-        return self::$countImages = self::$countImages++;
+        return self::$countImages = self::$countImages+1;
     }
     public static function getCountImages()
     {
         return self::$countImages;
+    }
+
+    public function getAge(){
+        $bday = Carbon::parse($this->birthday);
+        $now = Carbon::now();
+        $age = $now->subYears($bday->year);
+        return $age->year;
     }
 
     public function getAuthIdentifierName() {
@@ -45,11 +54,28 @@ class User extends Authenticatable
         return $this->localId;
     }
 
+    /*public function updateProfilePicture( $path){
+        $key = array_search('profile_picture_path',$this->fillable);
+        $this->fillable[$key] = 'profile_picture_path';
+//        return dd($this->fillable[12], $path, $array);
+//        $array = $this->fillable.array_key_last($path);
+        return dd($this,'Modelo User');
+    }*/
+
+    public function getProfilePicture(){
+        if($this->profile_pricture_path == ''){
+            return $this->no_profile_picture;
+        }
+        return $this->profile_pricture_path;
+    }
     public function fullName(){
         return $this->name . ' ' . $this->lastname;
     }
 
     public function getName(){
+        return 'name';
+    }
+    public function getFullName(){
         return 'name';
     }
 

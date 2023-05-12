@@ -25,7 +25,7 @@ class Photographer
         }
         else {
             Session::flush();
-            return redirect('/login');
+            return redirect('/');
         }
     }
 }
