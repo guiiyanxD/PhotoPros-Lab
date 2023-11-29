@@ -1,63 +1,105 @@
-@extends('layouts.welcome')
+@php use Illuminate\Support\Facades\Storage; @endphp
+@php use Illuminate\Support\Facades\Auth; @endphp
+@extends('layouts.app')
 
 @section('content')
     <div class="flex-center position-ref full-height">
         <div class="container">
-            <div class="row mt-4 mb-4 justify-content-center">
-                <h1 style="font-family:Bahnschrift"> Informacion del evento!</h1>
+            <div class="row mt-4 mb-4 justify-content-start">
+                <h1 style="font-family:Bahnschrift">{{$event['name']}}</h1>
             </div>
 
             <div class="row mt-4 mb-4">
-                <div class="col-md-12" style="padding:5%" >
+                <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header text-white bg-dark">
-                            <strong>
-                                <h2> {{$event->snapshot()->data()['name']}} </h2>
-                            </strong>
-                        </div>
+                        <img class="card-img-top" src="{{ Storage::disk('s3')->temporaryUrl($event['cover_picture'], now()->addMinutes(5)) }}" alt="">
                         <div class="card-body text-white" style="background-color: #4b4b4b">
                             <div class="col-md-12 d-inline-block">
-                                <h5><strong>Anfitrion:</strong></h5>
-                                <p> {{\Illuminate\Support\Facades\Auth::user()->fullName()}} (Tu)
+                                <p><strong>Anfitrion:</strong> {{Auth::user()->fullName()}} (Tu)</p>
+                            </div>
+                            <div class="col-md-12 d-inline-block">
+                                <p><strong>Descripción:</strong> {{ $event['description'] }}</p>
+                            </div>
+                            <div class="col-md-12 d-inline-block">
+                                <p><strong>Cuando:</strong> El evento inicia el {{ $event['date_event_ini_lit'] }}
+                                    y finaliza el {{ $event['date_event_end_lit'] }}
                                 </p>
                             </div>
                             <div class="col-md-12 d-inline-block">
-                                <h5><strong>Descripcion:</strong></h5> <p>{{ $event->snapshot()->data()['description'] }}</p>
+                                <p><strong>Lugar:</strong> {{ $event['address'] }} </p>
                             </div>
                             <div class="col-md-12 d-inline-block">
-                                <h5><strong>Cuando?:</strong></h5>
-                                <p>El evento inicia el {{ $event->snapshot()->data()['date_event_ini_lit'] }}
-                                    y terminar el {{ $event->snapshot()->data()['date_event_end_lit'] }}
-                                </p>
+                                <h5 class=""><strong>Comparte tu codigo de invitacion:</strong></h5>
+                                <h4 id="code_invitation" style="color: #f05837">{{ $event['code_invitation'] }}</h4>
                             </div>
-                            <div class="col-md-12 d-inline-block">
-                                <h5><strong>Donde?:</strong></h5>
-                                <p>{{ $event->snapshot()->data()['address'] }} </p>
-                            </div>
-                            <div class="col-md-12 d-inline-block">
-                                <h5 class="" ><strong>Comparte tu codigo de invitacion:</strong></h5>
-                                <h4 style="color: #f05837">{{ $event->snapshot()->data()['code_invitation'] }}</h4>
 
-                            </div>
-                            <div class="col-md-12 d-inline-block">
-                                <h5><strong>Invitados:</strong></h5>
-                                @foreach($event->snapshot()->data()['attendants'] as $attendants)
-                                    <p>{{ $attendants->snapshot()->data()['fname'] }}</p>
-                                @endforeach
-                            </div>
                             <div class="row form-group mt-4 mb-0">
-                                <div class="col text-center text-white" >
-                                    <button type="button" class="btnSubmit text-white" style="background-color: #f05837">
-                                        {{ __('Ver album del evento') }}
-                                    </button>
+                                <div class="col text-center text-white">
+                                    <a type="button" href="{{route('event.show.album',['event_id'=>$id])}}" {{-- el id del evento --}} class="btn text-white"
+                                       style="background-color: #f05837">
+                                        {{ __('Ver Album') }}
+                                    </a>
                                 </div>
-                                <div class="col text-center text-white" >
-                                    <a type="button" href="{{route('ph.hire')}}" class="btnSubmit text-white" style="background-color: #f05837">
+                                <div class="col text-center text-white">
+                                    <a type="button" href="{{route('ph.hire',['id'=>$id])}}" {{-- el id del evento --}} class="btn text-white"
+                                       style="background-color: #f05837">
                                         {{ __('Buscar fotografos') }}
                                     </a>
                                 </div>
+                                <div class="col text-center text-white">
+                                    <a type="button" href="#" class="btn text-white"
+                                       style="background-color: #f05837">
+                                        {{ __('Cambiar foto de portada') }}
+                                    </a>
+                                </div>
                                 <div class="col text-center">
-                                    <a type="button" class="btnSubmit text-center" style="text-decoration: none; " href="/home">Volver</a>
+                                    <a type="button" class="btn btn-outline-light text-center" style="text-decoration: none; "
+                                       href="/home">Volver</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="container">
+                        <div class="row pb-0">
+                            <div class="col-md-12">
+                                <h5>
+                                    <strong>Personas invitadas al evento:</strong>
+                                </h5>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="row pb-5 pt-0 ">
+                            <div class="col-md-12 m-0 pt-0 " style="margin: inherit">
+                                <div class="position-relative">
+                                    @foreach($arrayAtt as $key => $att)
+                                        <div class="image-round-100 rounded-circle">
+                                            <img title="{{$arrayAtt[$key]['fname'] }} {{$arrayAtt[$key]['lname']}}" style="width: 40px; height: 40px" src="{{ Storage::disk('s3')->temporaryUrl( $arrayAtt[$key]['profile_picture_path'], now()->addMinutes(5) )}}"  alt="att"/>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container ">
+                        <div class="row pb-0">
+                            <div class="col-md-12 ">
+                                <h5>
+                                    <strong>Fotografos del evento: </strong>
+                                </h5>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="row pb-5 pt-0 ">
+                            <div class="col-md-12 m-0 pt-0" style="margin: inherit">
+                                <div class="position-relative">
+                                    @foreach($arrayPh as $key => $phh)
+                                        <div class="image-round-100 rounded-circle">
+                                            <img title="{{$arrayPh[$key]['fname'] }} {{$arrayPh[$key]['lname']}}" style="width: 40px; height: 40px" src="{{ Storage::disk('s3')->temporaryUrl( $arrayPh[$key]['profile_picture_path'], now()->addMinutes(5) )}}"  alt="ph"/>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -66,27 +108,41 @@
             </div>
 
             <div class="row mt-4 mb-4">
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header text-white bg-dark">
-
-                        </div>
-                        <div class="card-body text-white" style="background-color: #4b4b4b">
-
-                        </div>
-                    </div>
+                <div class="col-md-12">
+                    <h1>Album del evento</h1>
                 </div>
-                <div class="col-md-4">
+                ///TODO TRAER IMAGENES DEL SERVIDOR
+
+                <div class="col-md-3">
                     <div class="card" style="">
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                        <div class="card-body text-white" style="background-color: #4b4b4b">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <img class="card-img-top" src="https://dkrn4sk0rn31v.cloudfront.net/uploads/2022/09/PUB-DEV.jpg"
+                             alt="Card image cap">
+                        <div class="card-footer text-white" style="background-color: #4b4b4b">
+                            <a href="#" class="btn btn-primary">Comprar</a>
+                            <a href="#" class="btn btn-primary">Adquirir</a>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+    <style>
+        .image-round-100 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .image-round-100:nth-child(2) {
+            /*top: 20px;*/
+            left: 20px;
+            border-radius: 50%;
+            z-index: 2;
+        }
+    </style>
 @endsection

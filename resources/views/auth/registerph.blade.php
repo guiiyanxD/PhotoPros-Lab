@@ -8,8 +8,8 @@
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-md-12 login-form-2" style="padding: 5%" >
-                    <form method="POST" action="{{ route('register',['is_newph'=>true]) }}">
+                <div class="col-md-12 login-form-2" style="padding: 4%" >
+                    <form method="POST" action="{{route('register')}}">
                         @csrf
 
                         <input type="hidden" name="newph&user">
@@ -331,7 +331,7 @@
 
                         <div class="row form-group mt-4 mb-0">
                             <div class="col text-center text-white" >
-                                <button type="submit" class="btnSubmit text-white" style="background-color: #f05837">
+                                <button type="submit" class="btn text-white" style="background-color: #f05837">
                                     {{ __('Registrar') }}
                                 </button>
                             </div>

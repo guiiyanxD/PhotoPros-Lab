@@ -16,7 +16,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->storage = app('firebase.storage')->getBucket();
+//        $this->storage = app('firebase.storage')->getBucket();
     }
 
     /**

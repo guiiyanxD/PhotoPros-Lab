@@ -14,10 +14,16 @@
             <div class="col-md-3">
                 <div class="position-relative d-inline-block flex-shrink-0 mr-5">
                     <img style="width: 260px; height:260px" class="rounded-circle"
-                         src="{{ Storage::disk('s3')->temporaryUrl($path, '+2 minutes')}}"
+                        @if( $path!= '')
+                            src="{{ Storage::disk('s3')->temporaryUrl($path, now()->addMinutes(5) )}}"
+                         @else
+                             src="{{ Storage::disk('s3')->temporaryUrl('holders/no_profile_picture.jpg', now()->addMinutes(5) )}}"
+                         @endif
                          alt="image profile">
                 </div>
+
             </div>
+
             <div class="col-md-9">
                 <div class="row m-1">
                     <div class="">
@@ -69,7 +75,7 @@
                 </div>
             @endif
             <hr>
-            <div class="col-md-12 text-center">
+            <div class="col-md-8 text-center">
                 <div class="card border-info">
                     <div class="card-header bg-info">{{ __('Tienes una fiesta en mente?') }}</div>
                     <div class="card-body">
@@ -105,12 +111,13 @@
                     </div>
                 </div>
             </div>
-            ///TODO: He llegado hasta enviar solicitudes de trabajo a los fotografos, configurando y actualizando las credenciales de aws s3 y firebase el proyecto funciona. Falta configurar el reconocimiento facial de amazon rekognition
 
         @foreach( $events as $doc)
             <div class="col-md-4 mt-4">
                 <div class="card" style="">
+                    <img class="card-img-top" src="{{Storage::disk('s3')->temporaryUrl($doc['cover_picture'], now()->addMinutes(5))}}" alt="Card image cap">
                     <div class="card-body">
+                        <hr>
                         <h3 class="card-title">{{$doc['name']}}</h3>
                         <h6 class="card-subtitle mb-2 text-muted">Anfitrion: {{$doc['host_id']->snapshot()['fname']}}</h6>
                         <p class="card-text">{{$doc['description']}}</p>
@@ -128,21 +135,30 @@
             <div class="col-md-12">
                 <h1>Eventos a los que estas invitado</h1>
             </div>
-            @foreach( $asAttendant as $doc)
-                <div class="col-md-4 mt-4">
-                    <div class="card" style="">
-                        <div class="card-body">
-                            <h3 class="card-title">{{$doc->snapshot()->data()['name']}}</h3>
-                            <h6 class="card-subtitle mb-2 text-muted">Anfitrion: {{$doc->snapshot()->data()['host_id']->snapshot()['fname']}}</h6>
-                            <p class="card-text">{{$doc->snapshot()->data()['description']}}</p>
-                            <p class="card-text">Desde {{$doc->snapshot()->data()['date_event_ini_lit']}} hasta {{$doc->snapshot()->data()['date_event_end_lit']}} </p>
-{{--                            <p class="card-text">Codigo de invitacion: {{$doc->snapshot()->data()['code_invitation']}}</p>--}}
-                            <a href="{{route('event.show.attendant',['id' => $doc->snapshot()->id()])}}" class="card-link">Ver evento</a>
-                            <a href="#" class="card-link">Another link</a>
+            @if(count($asAttendant) > 0)
+                @foreach( $asAttendant as $doc)
+                    <div class="col-md-4 mt-4">
+                        <div class="card" style="">
+                            <div class="card-body">
+                                <h3 class="card-title">{{$doc->snapshot()->data()['name']}}</h3>
+                                <h6 class="card-subtitle mb-2 text-muted">Anfitrion: {{$doc->snapshot()->data()['host_id']->snapshot()['fname']}}</h6>
+                                <p class="card-text">{{$doc->snapshot()->data()['description']}}</p>
+                                <p class="card-text">Desde {{$doc->snapshot()->data()['date_event_ini_lit']}} hasta {{$doc->snapshot()->data()['date_event_end_lit']}} </p>
+                                {{--                            <p class="card-text">Codigo de invitacion: {{$doc->snapshot()->data()['code_invitation']}}</p>--}}
+                                <a href="{{route('event.show.attendant',['id' => $doc->snapshot()->id()])}}" class="card-link">Ver evento</a>
+                                <a href="#" class="card-link">Another link</a>
+                            </div>
                         </div>
                     </div>
+                @endforeach
+            @else
+                <div class="col-md-12">
+                    <div class="text-center">
+                        <h2>Aun no has asistido a ningun evento </h2>
+                    </div>
                 </div>
-            @endforeach
+            @endif
+
         </div>
 
 

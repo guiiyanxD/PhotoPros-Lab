@@ -79,6 +79,7 @@ class RegisterController extends Controller
      */
     protected function register(Request $request)
     {
+//        return dd($request);
         try {
 //            $userFirestorProperties = [];
             $birthday = $this->mutateData($request->bday);
@@ -101,7 +102,9 @@ class RegisterController extends Controller
                     'price' => $request['price'],
                     'preference' => $request->has('preference'),
                     'categories' => $categories,
-                    'profile_picture_path' => '',
+                    'profile_picture_path' => 'holders/no_profile_picture.jpg',
+                    'eventsAsPh' => [],
+
                 ];
             }elseif($request->has('become')){
                 $userFirestorProperties = [
@@ -110,6 +113,7 @@ class RegisterController extends Controller
                     'price' => $request['price'],
                     'preference' => $request->has('preference'),
                     'categories' => $categories,
+                    'eventsAsPh' => [],
                 ];
             }else{
                 $userFirestorProperties = [
@@ -117,7 +121,9 @@ class RegisterController extends Controller
                     'lname' => $request['lastname'],
                     'bday'  => $birthday,
                     'created_at'  => new \DateTime(now()),
-                    'profile_picture_path' => '',
+                    'profile_picture_path' => 'holders/no_profile_picture.jpg',
+                    'eventsAsAttendant' => [],
+                    'eventsAsHost' => [],
                 ];
             }
 

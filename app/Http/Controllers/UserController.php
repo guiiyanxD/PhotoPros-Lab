@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Aws\Rekognition\RekognitionClient;
 use Aws\S3\Exception\S3Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ class UserController extends Controller
     public function index(){
         $asAttendant = $this->getEventsAsAttendant();
         $path = $this->getProfilePicturePath();
+//        return dd($path);
         $events = $this->getEvents()
             ->documents()
             ->rows();
@@ -39,7 +41,11 @@ class UserController extends Controller
             ->document(Auth::user()->localId)
             ->snapshot()
             ->data();
-        return $asAttendant['eventsAsAttendant'];
+        if(array_key_exists('asAttendant',$asAttendant)){
+            return $asAttendant['eventsAsAttendant'];
+        }else{
+            return [];
+        }
     }
     public function uploadImageView(){
         return view('user.upload');
@@ -61,19 +67,44 @@ class UserController extends Controller
         $path = $this->db->collection('users')
             ->document(Auth::user()->localId)
             ->snapshot()
-            ->data()['profile_picture_path'];
-        if( $path == ''){
-            return 'holders/no_profile_picture.png';
+            ->data();
+        if(array_key_exists('profile_picture_path', $path)){
+            if( $path == ''){
+                return 'holders/no_profile_picture.jpg';
+            }
+            return $path['profile_picture_path'];
+        }else{
+            return '';
         }
-        return $path;
     }
 
     public function uploadImage(Request $request){
 
         try {
+            $client = new RekognitionClient([
+                'region' => env('AWS_DEFAULT_REGION'),
+                'version' => 'latest'
+            ]);
+
+            $toPredict = fopen($request->file('imageProfile')->getPathName(), 'r');
+            $bytes = fread($toPredict, $request->file('imageProfile')->getSize());
+            $collectionName = 'photoprosLab';
+
+            $result = $client->indexFaces([
+                "CollectionId" => $collectionName,
+                'DetectionAttributes' => ['DEFAULT'],
+                'ExternalImageId' => '' . Auth::user()->localId . '',
+                'Image' => ['Bytes' => $bytes],
+                'MaxFaces' => 1,
+                'QualityFilter' => 'AUTO',
+            ]);
+
+            $result->get('indexFaces');
+            dd($result);
+
+
             $image = $request->file('imageProfile');
             $fileName = Auth::user()->localId . '.'. $image->getClientOriginalExtension();
-//            return dd($fileName);
             $filePath = 'profile-pictures/'. $fileName;
             $path = Storage::disk('s3')->put($filePath, file_get_contents($request->file('imageProfile')));
             $path = Storage::disk('s3')->url($path);

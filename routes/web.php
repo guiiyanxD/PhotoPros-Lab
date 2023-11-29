@@ -42,8 +42,6 @@ Route::get('upload/profile-picture',[\App\Http\Controllers\UserController::class
 Route::post('upload/profile-picture/doing',[\App\Http\Controllers\UserController::class,'uploadImage'])
 ->name('user.upload_profile_picture');
 
-Route::get('/ph/hire', [\App\Http\Controllers\PhController::class,'hire'])
-    ->name('ph.hire');
 
 
 
@@ -61,6 +59,16 @@ Route::get('/events/show/host/{id}', [\App\Http\Controllers\EventController::cla
     ->name('event.show.host');
 Route::get('/events/show/{id}', [\App\Http\Controllers\EventController::class,'showEventifAssistant'])
     ->name('event.show.attendant');
+Route::get('event/show/album/{event_id}',[\App\Http\Controllers\EventController::class,'showAlbum'])
+    ->name('event.show.album');
 
+Route::post('/upload_album_event/process',[\App\Http\Controllers\EventController::class,'albumToProcess'])
+    ->name('event.album_to_process');
+Route::get('ph/upload_album_event/{event_id}',[\App\Http\Controllers\EventController::class,'uploadAlbum'])
+->name('ph.uploadAlbum');
+Route::get('/ph/hire/{id}', [\App\Http\Controllers\PhController::class,'hirePh'])
+    ->name('ph.hire');
 
+Route::get('ph/hire/solicitud_enviada/{event_id}/{ph_id}/{sender}',[\App\Http\Controllers\EventPhotographerRequest::class,'storeNewReq'])
+    ->name('event.ph.requesting');
 //Route::get('aux/ph/profile', [\App\Http\Controllers\PhController::class,'updateNoProfilePicture']);
