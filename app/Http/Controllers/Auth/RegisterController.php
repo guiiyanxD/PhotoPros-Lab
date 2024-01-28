@@ -104,6 +104,7 @@ class RegisterController extends Controller
                     'categories' => $categories,
                     'profile_picture_path' => 'holders/no_profile_picture.jpg',
                     'eventsAsPh' => [],
+                    'face_id' => '',
 
                 ];
             }elseif($request->has('become')){
@@ -124,6 +125,8 @@ class RegisterController extends Controller
                     'profile_picture_path' => 'holders/no_profile_picture.jpg',
                     'eventsAsAttendant' => [],
                     'eventsAsHost' => [],
+                    'faceId' => '',
+
                 ];
             }
 
