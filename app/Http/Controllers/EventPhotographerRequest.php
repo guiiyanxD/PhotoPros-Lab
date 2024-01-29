@@ -41,6 +41,7 @@ class EventPhotographerRequest extends Controller
         try {
             $ph =  $this->user->document($ph_id);
             $event =  $this->event->document($event_id);
+
             if($sender == 'evt'){                                                   //El evento solicita a un fotografo
                 $this->request->add([
                     'event_id' => $event,

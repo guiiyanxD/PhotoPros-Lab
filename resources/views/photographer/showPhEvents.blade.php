@@ -36,8 +36,13 @@
             </div>
         @endforeach
     @else
-        <div class="col-md-12 text-center">
+        <div class="col-md-12 text-center justify-content-between">
             <h1>Aun no participas de ningun evento</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <a type="button" href="{{route('ph.lookFor.events')}}" class="btn btn-primary btn-lg btn-block">Buscar Eventos</a>
+                </div>
+            </div>
         </div>
     @endif
 </div>
