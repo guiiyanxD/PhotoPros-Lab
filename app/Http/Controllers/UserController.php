@@ -79,13 +79,12 @@ class UserController extends Controller
     }
 
     public function uploadImage(Request $request){
+
         try {
             $client = new RekognitionClient([
                 'region' => env('AWS_DEFAULT_REGION'),
                 'version' => 'latest'
             ]);
-            $listas = $client->listCollections();
-//            return dd($listas);
 
             $toPredict = fopen($request->file('imageProfile')->getPathName(), 'r');
             $bytes = fread($toPredict, $request->file('imageProfile')->getSize());
@@ -100,8 +99,7 @@ class UserController extends Controller
                 'QualityFilter' => 'AUTO',
             ]);
 
-            $result->get('indexFaces');
-//            return dd($result);
+
 
 
             $image = $request->file('imageProfile');
@@ -109,21 +107,19 @@ class UserController extends Controller
             $filePath = 'profile-pictures/'. $fileName;
             $path = Storage::disk('s3')->put($filePath, file_get_contents($request->file('imageProfile')));
             $path = Storage::disk('s3')->url($path);
-            $this->updateProfilePicture($filePath, $result);
-
+            $this->updateProfilePicture($filePath);
 
         }catch (S3Exception $e){
             return redirect()->route('home')->with('status', $e->getMessage());
         }
-        return redirect('home')->with('status', 'Tu foto de perfil se actualizo correctamente');
+        return redirect()->route('photographer.home')->with('status', 'Tu foto de perfil se actualizo correctamente');
     }
 
-    public function updateProfilePicture($path, $result){
+    public function updateProfilePicture($path){
         $this->db->collection('users')
             ->document(Auth::user()->localId)
             ->update([
-                ['path'=> 'profile_picture_path', 'value' => $path],
-                ['path'=> 'face_id', 'value' => $result],
+                ['path'=> 'profile_picture_path', 'value' => $path]
             ]);
     }
 

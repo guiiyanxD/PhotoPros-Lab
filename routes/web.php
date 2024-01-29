@@ -29,12 +29,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'UserController@index')->name('home');
+Route::get('/home.blade.php', 'UserController@index')->name('home');
 Route::get('/register/ph', [\App\Http\Controllers\Auth\RegisterController::class,'registerPh'])
     ->name('registerph.view');
 Route::get('/become/ph', [\App\Http\Controllers\Auth\RegisterController::class,'becomePh'])
     ->name('becomeph.view');
-Route::get('photographer/home', 'PhController@index')
+Route::get('photographer/home.blade.php', 'PhController@index')
     ->name('photographer.home');
 
 Route::get('upload/profile-picture',[\App\Http\Controllers\UserController::class,'uploadImageView'])
@@ -71,4 +71,9 @@ Route::get('/ph/hire/{id}', [\App\Http\Controllers\PhController::class,'hirePh']
 
 Route::get('ph/hire/solicitud_enviada/{event_id}/{ph_id}/{sender}',[\App\Http\Controllers\EventPhotographerRequest::class,'storeNewReq'])
     ->name('event.ph.requesting');
+
+Route::get('ph/show/events', [\App\Http\Controllers\PhController::class,'getEventsAsPh'])
+    ->name('ph.show.events');
+Route::get('ph/look-for/events', [\App\Http\Controllers\PhController::class,'getEventsToRequest'])
+    ->name('ph.lookFor.events');
 //Route::get('aux/ph/profile', [\App\Http\Controllers\PhController::class,'updateNoProfilePicture']);

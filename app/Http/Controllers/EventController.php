@@ -86,6 +86,8 @@ class EventController extends Controller
                 'created_at' => new Carbon(now()),
                 'cover_picture' => 'holders/no_cover_picture.jpg',
                 'attendants' => [],
+                'photographers' => [],
+                'album' => [],
                 'host_id' => $this->users->document( \Illuminate\Support\Facades\Auth::user()->localId),
             ]);
             $user = $this->users->document(Session::get('uid'));
@@ -122,9 +124,9 @@ class EventController extends Controller
             $this->addAtendantByCondeInvitationPrivate($request);
 
         }catch (Exception $e){
-            return redirect('home')->with('event-error', $e->getMessage());
+            return redirect('home.blade.php')->with('event-error', $e->getMessage());
         }
-        return redirect('home')->with('event-error','Ahora formas parte del evento');
+        return redirect('home.blade.php')->with('event-error','Ahora formas parte del evento');
     }
     private function addAtendantByCondeInvitationPrivate( Request $request){
         if($request->has('code_invitation')){ //Si por alguna razon se envia el formulario vacio
@@ -147,7 +149,7 @@ class EventController extends Controller
                 throw new Exception("Firestore: El codigo de invitacion no existe.");
             }
         }else{
-            throw new Exception("El codigo de invitacion no existe.");
+            throw new Exception("El campo de codigo de invitacion esta vacio.");
         }
     }
 
@@ -277,7 +279,7 @@ class EventController extends Controller
 
         }
 
-        return redirect()->route('photographer.home');//->with('status','Album subido exitosamente');
+        return redirect()->route('photographer.home.blade.php');//->with('status','Album subido exitosamente');
     }
 
     public function showAlbum($eventId){
