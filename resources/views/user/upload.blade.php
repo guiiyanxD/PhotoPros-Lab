@@ -1,5 +1,4 @@
-@php use Illuminate\Support\Facades\Session; @endphp
-[@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
     <div class="container">

@@ -75,7 +75,7 @@
                 </div>
             @endif
             <hr>
-            <div class="col-md-8 text-center">
+            <div class="col-md-12 text-center">
                 <div class="card border-info">
                     <div class="card-header bg-info">{{ __('Tienes una fiesta en mente?') }}</div>
                     <div class="card-body">

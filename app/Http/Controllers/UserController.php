@@ -99,8 +99,7 @@ class UserController extends Controller
                 'QualityFilter' => 'AUTO',
             ]);
 
-            $result->get('indexFaces');
-            dd($result);
+
 
 
             $image = $request->file('imageProfile');
@@ -113,7 +112,7 @@ class UserController extends Controller
         }catch (S3Exception $e){
             return redirect()->route('home')->with('status', $e->getMessage());
         }
-        return redirect('home')->with('status', 'Tu foto de perfil se actualizo correctamente');
+        return redirect()->route('photographer.home')->with('status', 'Tu foto de perfil se actualizo correctamente');
     }
 
     public function updateProfilePicture($path){

@@ -10,7 +10,7 @@
             </div>
 
             <div class="row mt-4 mb-4">
-                <div class="col-md-12">
+                <div class="col-md-8">
                     <div class="card">
                         <img class="card-img-top" src="{{ Storage::disk('s3')->temporaryUrl($event['cover_picture'], now()->addMinutes(5)) }}" alt="">
                         <div class="card-body text-white" style="background-color: #4b4b4b">
@@ -54,13 +54,13 @@
                                 </div>
                                 <div class="col text-center">
                                     <a type="button" class="btn btn-outline-light text-center" style="text-decoration: none; "
-                                       href="/home">Volver</a>
+                                       href="{{route('home')}}">Volver</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <div class="container">
                         <div class="row pb-0">
                             <div class="col-md-12">

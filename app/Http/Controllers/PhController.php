@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Google\Cloud\Firestore\V1\StructuredQuery\FieldFilter\Operator;
+use Google\Type\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -13,6 +16,7 @@ class PhController extends Controller
     protected $db;
     protected $users;
     protected $events;
+    protected $ph;
     protected $eventController;
     public function __construct()
     {
@@ -22,36 +26,42 @@ class PhController extends Controller
         $this->users = $this->db->collection('users');
         $this->events = $this->db->collection('events');
         $this->requests = $this->db->collection('event_ph_requests');
+
     }
 
     public function index(){
         $ph = $this->users
             ->document(Auth::user()->localId)
             ->snapshot();
-        $response = $this->getEventsAsPh($ph);
-        $events = $response['arrayEvent'];
-        $ids = $response['arrayId'];
-        $hosts = $this->eventController->getHost($events);
-        return view('photographer.home', compact('ph', 'events', 'hosts','ids'));
+        return view('photographer.home', compact('ph'));
     }
 
-    public function getEventsId($events){
 
-    }
-
-    public function getEventsAsPh($ph){
-        $events = $ph->get('eventsAsPh');
+    public function getEventsAsPh(){
+        $phData = $this->users
+            ->document(Auth::user()->localId)
+            ->snapshot();
+        $eventsPh = $phData->get('eventsAsPh');
         $arrayEvent = array();
         $arrayId = array();
-//        $arrayToReturn = array();
-        foreach($events as $key => $evt){
-            array_push($arrayEvent, $events[$key]->snapshot()->data());
-            array_push($arrayId, $events[$key]->id());
+        foreach($eventsPh as $key => $evt){
+            array_push($arrayEvent, $eventsPh[$key]->snapshot()->data());
+            array_push($arrayId, $eventsPh[$key]->id());
         }
-        //        return dd($arrayToReturn);
-        return array_combine(
-            ['arrayEvent','arrayId'],
-            [$arrayEvent, $arrayId]);
+        $arrays = array_combine(['arrayEvent','arrayId'],[$arrayEvent, $arrayId]);
+        $events = $arrays['arrayEvent'];
+        $ids = $arrays['arrayId'];
+        $hosts = $this->eventController->getHost($events);
+        return view('photographer.showPhEvents', compact('events', 'hosts','ids'));
+    }
+
+    public function getEventsToRequest(){
+        $events = $this->db->collection('events')
+            ->where('date_event_ini' , '>', Carbon::now()->toDateString())
+//            ->where($this->users->document(Auth::user()->localId)->snapshot->data(), Operator::NOT_IN, 'photographers' )
+            ->documents()
+            ->rows();
+        return view('photographer.lookForEvents', compact('events'));
     }
 
     public function hirePh($id){

@@ -1,15 +1,15 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
+{{--@php use Illuminate\Support\Facades\Storage; @endphp--}}
 @extends('layouts.app')
 
 @section('content')
     <div id="carouselExampleControls" class=" carousel slide" data-ride="carousel">
         <div class="carousel-inner ">
             <div class="carousel-item active">
-                <img class="d-block mx-auto w-100" src="https://picsum.photos/1920/720" alt="First slide">
+                <img class="d-block mx-auto w-75 h-auto" src="https://picsum.photos/1920/720" alt="First slide">
                 <div class="carousel-caption d-none d-md-block">
                     <div>
-                        <h3>Bienvenido de nuevo</h3>
-                        <h5>{{ $ph['fname'] .' '.  $ph['lname'] }}</h5>
+                        <h3>Bienvenido de nuevo, fotográfo</h3>
+                        <h5>{{Auth::user()->name .' ' . Auth::user()->lastname}}</h5>
                     </div>
                 </div>
             </div>
@@ -17,50 +17,80 @@
     </div>
     <hr>
     <br>
-    <div class="container mt-2">
+    <div class="container">
         <div class="row">
             <div class="col-md-12 ">
                 <h1>
-                    Home
+                    Inicio
                 </h1>
             </div>
+            <hr>
+            <div class="col-md-3">
+                <div class="position-relative d-inline-block flex-shrink-0 mr-5">
+                    <img style="width: 260px; height:260px" class="rounded-circle"
+                             src="{{ Storage::disk('s3')->temporaryUrl($ph['profile_picture_path'], now()->addMinutes(5) )}}"
+                         alt="image profile">
+                </div>
+
+            </div>
+            <div class="col-md-9">
+                <div class="row m-1">
+                    <div class="">
+                        <h3>
+                            Nombre: {{Auth::user()->name .' ' . Auth::user()->lastname}}
+                        </h3>
+                    </div>
+                </div>
+                <div class="row m-1">
+                    <div class="">
+                        <h3>
+                            Email: {{Auth::user()->email}}
+                        </h3>
+                    </div>
+                </div>
+                <div class="row m-1">
+                    <div class="">
+                        <h3>
+                            Edad: {{Auth::user()->getAge() . ' Años'}}
+                        </h3>
+                    </div>
+                </div>
+                <div class="row m-1">
+                    <a type="button" href="{{route('user.upload_profile_picture.view')}}"
+                       class="btn btn-outline-info mb-3">
+                        Actualizar foto de perfil
+                    </a>
+                </div>
+                <div class="row ml-1 mt-0">
+                    <small>
+                        {{__('*Te recomendamos subir una imagen clara de tu rostro, para asi poder notificarte asistas a un evento')}}
+                    </small>
+                </div>
+
+            </div>
+
         </div>
         <hr>
         <div class="row">
-            @foreach($events as $key => $evt)
-                <div class="col-md-4">
-                    <div class="card">
-                        <img class="card-img-top" src="{{Storage::disk('s3')->temporaryUrl($evt['cover_picture'], now()->addMinutes(5))}}" alt="cover_picture">
-                        <div class="card-body text-white" style="background-color: #4b4b4b">
-                            <div class="col-md-12 d-inline-block">
-                                <p><strong> {{$hosts[$key]['fname']}} {{$hosts[$key]['lname']}}</strong>
-                                    (Organizador(a)) </p>
-                            </div>
-                            <div class="col-md-12 d-inline-block">
-                                <p><strong>Informacion Adicional:</strong> El evento inicia
-                                    el {{ $evt['date_event_ini_lit'] }}
-                                    y finaliza el {{ $evt['date_event_end_lit'] }}. En {{ $evt['address'] }}
-                                </p>
-                            </div>
-{{--                            {{$ids[$key]}}--}}
-                            <div class="row form-group mt-4 mb-0">
-                                <div class="col text-center text-white">
-                                    <a type="button" href="{{route('ph.uploadAlbum',[$ids[$key]])}}" class="btn text-white"
-                                       style="background-color: #f05837">
-                                        {{ __('Subir Fotos') }}
-                                    </a>
-                                    <a type="button" href="{{route('event.show.album',[$ids[$key]])}}" class="btn text-white"
-                                       style="background-color: #f05837">
-                                        {{ __('Ver Album') }}
-                                    </a>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+            <div class="col-md-12">
+                <h3>Panel de control</h3>
+            </div>
+            <hr>
+            <div class="col-md-3">
+                <a type="button" href="{{route('ph.show.events')}}" class="btn btn-primary btn-lg btn-block">Ver eventos</a>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-primary btn-lg btn-block">Ver solicitudes de events</button>
+            </div>
+            <div class="col-md-3">
+                <a type="button" href="{{route('ph.lookFor.events')}}" class="btn btn-primary btn-lg btn-block">Buscar Eventos</a>
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-primary btn-lg btn-block">Editar Biografia</button>
+            </div>
         </div>
+        <hr>
+
         <hr>
     </div>
 @endsection

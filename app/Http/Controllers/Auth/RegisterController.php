@@ -136,6 +136,7 @@ class RegisterController extends Controller
                     ['path' => 'price', 'value' => $request['price']],
                     ['path' => 'preference', 'value' => $request->has('preference')],
                     ['path' => 'categories', 'value' => $categories],
+                    ['path' => 'eventsAsPh', 'value' => []],
                 ]);
             }else{
                 $authUser = $this->auth->createUser($userAuthProperties);

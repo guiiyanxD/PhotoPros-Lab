@@ -38,17 +38,17 @@ class EventPhotographerRequest extends Controller
         /**
          * Codigo usado para crear solicitudes de amistad
          */
-        /*try {
+        try {
             $ph =  $this->user->document($ph_id);
             $event =  $this->event->document($event_id);
-            if($sender == 'es'){
+            if($sender == 'evt'){                                                   //El evento solicita a un fotografo
                 $this->request->add([
                     'event_id' => $event,
                     'ph_id' => $ph,
                     'status' => 'Pending',
                     'type' => 'eventSent'
                 ]);
-            }else{
+            }else{                                                               //si el fotografo solicita a un evento
                 $this->request->add([
                     'event_id' => $event,
                     'ph_id' => $ph,
@@ -56,13 +56,12 @@ class EventPhotographerRequest extends Controller
                     'type' => 'phSent'
                 ]);
             }
-
         }
         catch (\Exception $exception){
             return redirect()->back()->with('event',$exception->getMessage());
-        }*/
+        }
 
-        $ph =  $this->user->document($ph_id);
+        /*$ph =  $this->user->document($ph_id);
         $event =  $this->event->document($event_id);
         $ph->update([
             [
@@ -75,7 +74,7 @@ class EventPhotographerRequest extends Controller
                 'path' => 'photographers',
                 'value' => FieldValue::arrayUnion([$ph])
             ]
-        ]);
+        ]);*/
 
         return redirect()->route('event.show.host',['id'=>$event->id()]); //with mensaje de exitoso
     }

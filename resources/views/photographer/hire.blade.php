@@ -23,7 +23,7 @@
                                     @else por foto tomada @endif un monto de {{$ph->data()['price']}}$. Contactame.
                                     Mi numero de telefono es {{$ph->data()['telefono']}}
                                 </p>
-                                <a href="{{route('event.ph.requesting',['event_id'=>$id,'ph_id'=>$ph->id(),'sender'=>'es'])}}" class="btn btn-primary">Contratar</a>
+                                <a href="{{route('event.ph.requesting',['event_id'=>$id,'ph_id'=>$ph->id(),'sender'=>'evt'])}}" class="btn btn-primary">Contratar</a>
                             </div>
                         </div>
                     </div>
