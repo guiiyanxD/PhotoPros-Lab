@@ -1,5 +1,4 @@
-@php use Illuminate\Support\Facades\Storage; @endphp
-@php use Illuminate\Support\Facades\Auth; @endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -34,26 +33,23 @@
                             </div>
 
                             <div class="row form-group mt-4 mb-0">
-                                <div class="col text-center text-white">
-                                    <a type="button" href="{{route('event.show.album',['event_id'=>$id])}}" {{-- el id del evento --}} class="btn text-white"
-                                       style="background-color: #f05837">
+                                <div class="col text-center ">
+                                    <a type="button" href="{{route('event.show.album',['event_id'=>$id])}}" {{-- el id del evento --}} class="btn btn-primary btn-lg btn-block">
                                         {{ __('Ver Album') }}
                                     </a>
                                 </div>
                                 <div class="col text-center text-white">
-                                    <a type="button" href="{{route('ph.hire',['id'=>$id])}}" {{-- el id del evento --}} class="btn text-white"
-                                       style="background-color: #f05837">
+                                    <a type="button" href="{{route('ph.hire',['id'=>$id])}}" {{-- el id del evento --}} class="btn btn-primary btn-lg btn-block">
                                         {{ __('Buscar fotografos') }}
                                     </a>
                                 </div>
                                 <div class="col text-center text-white">
-                                    <a type="button" href="#" class="btn text-white"
-                                       style="background-color: #f05837">
-                                        {{ __('Cambiar foto de portada') }}
+                                    <a type="button" href="{{route('event.ph.showRequest',['sender'=> 'evt', 'evt'=>$id])}}" class="btn btn-primary btn-lg btn-block">
+                                        {{ __('Ver solicitudes') }}
                                     </a>
                                 </div>
                                 <div class="col text-center">
-                                    <a type="button" class="btn btn-outline-light text-center" style="text-decoration: none; "
+                                    <a type="button" class="btn btn-light btn-lg btn-block "
                                        href="{{route('home')}}">Volver</a>
                                 </div>
                             </div>

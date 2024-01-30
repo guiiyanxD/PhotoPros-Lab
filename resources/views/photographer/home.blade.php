@@ -80,10 +80,10 @@
                 <a type="button" href="{{route('ph.show.events')}}" class="btn btn-primary btn-lg btn-block">Ver eventos</a>
             </div>
             <div class="col-md-3">
-                <a type="button" href="{{route('event.ph.showRequest',['sender'=>'ph'])}}" class="btn btn-primary btn-lg btn-block">Ver solicitudes de events</a>
+                <a type="button" href="{{route('ph.lookFor.events')}}" class="btn btn-primary btn-lg btn-block">Buscar Eventos</a>
             </div>
             <div class="col-md-3">
-                <a type="button" href="{{route('ph.lookFor.events')}}" class="btn btn-primary btn-lg btn-block">Buscar Eventos</a>
+                <a type="button" href="{{route('event.ph.showRequest',['sender'=>'ph'])}}" class="btn btn-primary btn-lg btn-block">Ver solicitudes de eventos</a>
             </div>
             <div class="col-md-3">
                 <button type="button" class="btn btn-primary btn-lg btn-block">Editar Biografia</button>

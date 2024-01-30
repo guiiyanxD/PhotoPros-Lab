@@ -39,14 +39,13 @@ class EventPhotographerRequest extends Controller
         $event =  $this->event->document($event_id);
         $exist = $this->existRequest($ph,$event);
         try {
-
             if(!$exist){
                 if($sender == 'evt'){                                                   //El evento solicita a un fotografo
                     $this->request->add([
                         'event_id' => $event,
                         'ph_id' => $ph,
                         'status' => 'Pending',
-                        'type' => 'eventSent'
+                        'type' => 'evtSent'
                     ]);
                 }else{                                                               //si el fotografo solicita a un evento
                     $this->request->add([
@@ -94,7 +93,10 @@ class EventPhotographerRequest extends Controller
      * @return false|true
      */
     public function existRequest($ph, $event){
-        $allEvtRequestedByPh = $this->request->where('event_id', '=', $event)->documents()->rows();
+        $allEvtRequestedByPh = $this->request
+            ->where('event_id', '=', $event)
+            ->documents()
+            ->rows();
         foreach ($allEvtRequestedByPh as $evt){
             if($evt->data()['ph_id'] == $ph){
                 return true;
@@ -104,24 +106,67 @@ class EventPhotographerRequest extends Controller
 
     }
 
-    public  function getRequestsForPh($sender){
+    public  function getRequestsForPh($sender, $evt=null){
         if($sender == 'ph'){
+            $arrayEnviadas = [];
+            $arrayRecibidas = [];
+
             $ph = $this->user->document(\Illuminate\Support\Facades\Auth::user()->localId);
             $allEvtRequestedByPh = $this->request
                 ->where('ph_id', '=', $ph)
                 ->where('status', '=', 'Pending')
+                ->where('type', '=', 'phSent')
                 ->documents()
                 ->rows();
-            $array = [];
-
             foreach ($allEvtRequestedByPh as $evt){
                 $evento = $this->event->document( $evt['event_id']->id())->snapshot();
-                array_push($array, $evento);
+                array_push($arrayEnviadas, $evento);
             }
-            return view('request.show', compact('array'));
+
+            $allRequestedByEvt = $this->request
+                ->where('ph_id', '=', $ph)
+                ->where('status', '=', 'Pending')
+                ->where('type', '=', 'evtSent')
+                ->documents()
+                ->rows();
+            foreach ($allRequestedByEvt as $evt){
+                $evento = $this->event->document( $evt['event_id']->id())->snapshot();
+                array_push($arrayRecibidas, $evento);
+            }
+//            return dd($arrayRecibidas);
+            return view('request.showForPh', compact('arrayEnviadas', 'arrayRecibidas'));
         }else{
-            
+            return dd("se envia desde el evento", $evt);
+            if($event != null){
+                $arrayEnviadas = [];
+                $arrayRecibidas = [];
+
+                $ph = $this->event->document($event);
+                $allEvtRequestedByPh = $this->request
+                    ->where('ph_id', '=', $ph)
+                    ->where('status', '=', 'Pending')
+                    ->where('type', '=', 'phSent')
+                    ->documents()
+                    ->rows();
+                foreach ($allEvtRequestedByPh as $evt){
+                    $evento = $this->event->document( $evt['event_id']->id())->snapshot();
+                    array_push($arrayEnviadas, $evento);
+                }
+
+                $allRequestedByEvt = $this->request
+                    ->where('ph_id', '=', $ph)
+                    ->where('status', '=', 'Pending')
+                    ->where('type', '=', 'evtSent')
+                    ->documents()
+                    ->rows();
+                foreach ($allRequestedByEvt as $evt){
+                    $evento = $this->event->document( $evt['event_id']->id())->snapshot();
+                    array_push($arrayRecibidas, $evento);
+                }
+            }
+//            return dd($arrayRecibidas);
         }
     }
+
 
 }
