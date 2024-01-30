@@ -2,20 +2,14 @@
 @section('content')
     <div class="container">
         <div class="row">
-
             <div class="col-md-12">
                 <h1>
-                    Postulate a alguno de los eventos proximos
+                    Solicitudes enviadas
                 </h1>
             </div>
-            @if (session('event'))
-                <div class="alert alert-warning" role="alert">
-                    {{ session('event') }}
-                </div>
-            @endif
         </div>
         <div class="row">
-            @foreach($events as $key => $evt)
+            @foreach($array as $evt)
                 <div class="col-md-4 mt-3 ">
                     <div class="card" style="">
                         <img class="card-img-top" src="{{ Storage::disk('s3')->temporaryUrl($evt->data()['cover_picture'], '+2 minutes')}}" alt="Card image cap">
@@ -24,16 +18,13 @@
                             <p class="card-text"> {{ $evt->data()['description'] }}</p>
                             <p class="card-text"> {{ $evt->data()['date_event_ini_lit'] }}</p>
                             <p class="card-text"> {{ $evt->data()['date_event_end_lit'] }}</p>
-                            <a href="{{route('event.ph.requesting',
-                                [
-                                    'event_id'  =>  $evt->id(),
-                                    'ph_id'     =>  Auth::user()->localId,
-                                    'sender'    =>  'ph',
-                                ])}}" class="btn btn-primary">Postular</a>
+                            <a href="#" class="btn btn-danger">Cancelar solicitud</a>
+
                         </div>
                     </div>
                 </div>
             @endforeach
+
         </div>
     </div>
 @endsection

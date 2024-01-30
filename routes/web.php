@@ -72,6 +72,9 @@ Route::get('/ph/hire/{id}', [\App\Http\Controllers\PhController::class,'hirePh']
 Route::get('ph/hire/solicitud_enviada/{event_id}/{ph_id}/{sender}',[\App\Http\Controllers\EventPhotographerRequest::class,'storeNewReq'])
     ->name('event.ph.requesting');
 
+Route::get('ph/event/request/{sender}', [\App\Http\Controllers\EventPhotographerRequest::class,'getRequestsForPh'])
+    ->name('event.ph.showRequest');
+
 Route::get('ph/show/events', [\App\Http\Controllers\PhController::class,'getEventsAsPh'])
     ->name('ph.show.events');
 Route::get('ph/look-for/events', [\App\Http\Controllers\PhController::class,'getEventsToRequest'])
