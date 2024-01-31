@@ -136,35 +136,38 @@ class EventPhotographerRequest extends Controller
 //            return dd($arrayRecibidas);
             return view('request.showForPh', compact('arrayEnviadas', 'arrayRecibidas'));
         }else{
-            return dd("se envia desde el evento", $evt);
-            if($event != null){
+//            return dd("se envia desde el evento", $evt);
+            if($evt != null){
                 $arrayEnviadas = [];
                 $arrayRecibidas = [];
 
-                $ph = $this->event->document($event);
-                $allEvtRequestedByPh = $this->request
-                    ->where('ph_id', '=', $ph)
-                    ->where('status', '=', 'Pending')
-                    ->where('type', '=', 'phSent')
-                    ->documents()
-                    ->rows();
-                foreach ($allEvtRequestedByPh as $evt){
-                    $evento = $this->event->document( $evt['event_id']->id())->snapshot();
-                    array_push($arrayEnviadas, $evento);
-                }
-
-                $allRequestedByEvt = $this->request
-                    ->where('ph_id', '=', $ph)
+                //Solicitudes que el evento(organizador), ha enviado
+                $evento = $this->event->document($evt);
+                $allEvtRequestedForPh = $this->request
+                    ->where('event_id', '=', $evento)
                     ->where('status', '=', 'Pending')
                     ->where('type', '=', 'evtSent')
                     ->documents()
                     ->rows();
-                foreach ($allRequestedByEvt as $evt){
-                    $evento = $this->event->document( $evt['event_id']->id())->snapshot();
-                    array_push($arrayRecibidas, $evento);
+                foreach ($allEvtRequestedForPh as $forPh){
+                    $ph = $this->event->document( $forPh['ph_id']->id())->snapshot();
+                    array_push($arrayEnviadas, $ph);
+                }
+
+                //solicitudes que los ph envian a un evento
+                $allRequestedByEvt = $this->request
+                    ->where('event_id', '=', $evento)
+                    ->where('status', '=', 'Pending')
+                    ->where('type', '=', 'phSent')
+                    ->documents()
+                    ->rows();
+                foreach ($allRequestedByEvt as $byPh){
+                    $ph = $this->event->document( $byPh['event_id']->id())->snapshot();
+                    array_push($arrayRecibidas, $ph);
                 }
             }
-//            return dd($arrayRecibidas);
+            return view('request.showForEvt',compact('arrayEnviadas', 'arrayRecibidas'));
+//            return dd($arrayEnviadas,$arrayRecibidas);
         }
     }
 

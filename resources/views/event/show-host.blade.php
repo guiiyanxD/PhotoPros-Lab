@@ -57,6 +57,25 @@
                     </div>
                 </div>
                 <div class="col-md-4">
+                    <div class="container ">
+                        <div class="row pb-0">
+                            <div class="col-md-12 ">
+                                <h5>
+                                    <strong>Codigo Qr de ingreso al evento: </strong>
+                                </h5>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="row pb-5 pt-0 ">
+                            <div class="col-md-12 m-0 pt-0">
+                                <div class="">
+                                    {{QrCode::generate('Embed me into an e-mail!')}}
+                                    <a class="btn" role="button" id="descargarBtn">Descargar SVG</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="container">
                         <div class="row pb-0">
                             <div class="col-md-12">
@@ -102,8 +121,25 @@
                     </div>
                 </div>
             </div>
-
-            <div class="row mt-4 mb-4">
+            <script>
+                document.getElementById('descargarBtn').addEventListener('click', function() {
+                    // Obtener la imagen como un Blob
+                    var img = document.getElementById('miImagen');
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(function(blob) {
+                        // Crear un enlace temporal y simular un clic para descargar el archivo
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = 'miImagen.jpg';
+                        link.click();
+                    }, 'image/jpeg');
+                });
+            </script>
+            {{--<div class="row mt-4 mb-4">
                 <div class="col-md-12">
                     <h1>Album del evento</h1>
                 </div>
@@ -120,7 +156,7 @@
                     </div>
 
                 </div>
-            </div>
+            </div>--}}
         </div>
     </div>
     <style>

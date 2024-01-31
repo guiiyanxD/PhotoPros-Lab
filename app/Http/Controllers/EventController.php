@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class EventController extends Controller
 {
@@ -72,6 +73,29 @@ class EventController extends Controller
         return view('event.create');
     }
     public function store(Request $request){
+//        $path = public_path().'/qrCodes/' . $request->name;
+        $pathToS3 = 'event_pictures/'.$request->name;
+        $existe= Storage::disk('s3')->exists($pathToS3);
+        $qr = QrCode::format('svg')->size(100)->generate('Qr de prueba');
+
+        $uploaded = '';
+        if($existe){
+            $uploaded = Storage::disk('s3')->put($pathToS3, $qr); //Si existe la ruta, entonces sube la imagen
+        }else{
+            $created = Storage::disk('s3')->makeDirectory($pathToS3); //si no existe entonces la crea
+            if($created){
+                $uploaded = Storage::disk('s3')->put($pathToS3, $qr );
+            }else{
+                echo("No se pudo crear la carpeta personal");
+            }
+        }
+
+
+//        Storage::makeDirectory('qrCodes/'.$request->name);
+
+//        $qr = QrCode::format('svg')->generate('Qr de prueba', );
+//        $code = Storage::disk('local')->put('qrCodes/'.$request->name.'/', $qr.'.svg');
+        return dd($existe, $uploaded);
         try {
             $this->checkDates($request['date_event_ini'], $request['date_event_end']);
             $event = $this->events->add([
@@ -94,6 +118,12 @@ class EventController extends Controller
             $user->update([
                 ['path'=>'eventsAsHost', 'value' => FieldValue::arrayUnion([$event])]
             ]);
+            $path = public_path().'/qrCodes/' . $event->id();
+            Storage::makeDirectory($path);
+
+            Storage::makeDirectory('/qrCodes/'.$event->id());
+//            Storage::putFileAs();
+            QrCode::generate('Qr de prueba');
 //            return dd($event->id()   ); //Con este codigo obtengo el id del objeto creado
         }catch (Exception $exception){
             return redirect()->back()->with('event', $exception->getMessage());

@@ -27,7 +27,7 @@
                 @endforeach
             @else
                 <div class="col-md-12 justify-content-center text-center">
-                    <h3>No has postulado a ningun evento aun</h3>
+                    <h3>No has solicitado a ningun fotografo aun </h3>
                 </div>
             @endif
         </div>
@@ -58,7 +58,7 @@
                 @endforeach
             @else
                 <div class="col-md-12 justify-content-center text-center">
-                    <h2>No has recibido ninguna solicitud de trabajo aun </h2>
+                    <h2>Ningun fotografo te ha solicitado trabajar en el evento </h2>
                 </div>
             @endif
         </div>

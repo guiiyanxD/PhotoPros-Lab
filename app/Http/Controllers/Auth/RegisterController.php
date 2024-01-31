@@ -79,9 +79,7 @@ class RegisterController extends Controller
      */
     protected function register(Request $request)
     {
-//        return dd($request);
         try {
-//            $userFirestorProperties = [];
             $birthday = $this->mutateData($request->bday);
             $categories = $this->SetCategories($request->categories);
             $userAuthProperties = [
@@ -96,15 +94,18 @@ class RegisterController extends Controller
                     'fname' => $request['name'],
                     'lname' => $request['lastname'],
                     'bday' => $birthday,
+                    'profile_picture_path' => 'holders/no_profile_picture.jpg',
+                    'face_id' => '',
+                    'eventsAsAttendant' => [],
+                    'eventsAsHost' => [],
                     'created_at' => new \DateTime(now()),
+                    //De aqui en adelante son campos para el ph
                     'is_photographer' => true,
                     'telefono' => $request['telefono'],
                     'price' => $request['price'],
                     'preference' => $request->has('preference'),
                     'categories' => $categories,
-                    'profile_picture_path' => 'holders/no_profile_picture.jpg',
                     'eventsAsPh' => [],
-                    'face_id' => '',
 
                 ];
             }elseif($request->has('become')){
@@ -121,11 +122,11 @@ class RegisterController extends Controller
                     'fname' => $request['name'],
                     'lname' => $request['lastname'],
                     'bday'  => $birthday,
-                    'created_at'  => new \DateTime(now()),
                     'profile_picture_path' => 'holders/no_profile_picture.jpg',
+                    'face_id' => '',
                     'eventsAsAttendant' => [],
                     'eventsAsHost' => [],
-                    'faceId' => '',
+                    'created_at'  => new \DateTime(now()),
 
                 ];
             }
