@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvitationMail;
 use Aws\Rekognition\RekognitionClient;
 use Carbon\Carbon;
 use Exception;
@@ -11,8 +12,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -198,6 +201,16 @@ class EventController extends Controller
 //        return dd($event->data(),$arrayPh, $photographers[0]->snapshot()->data() );
 
         return view('event.show-host', compact('arrayAtt','arrayPh','event','id'));
+    }
+
+    public function sendInvitationEmail(Request $request){
+        Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'max:255'],
+        ]);
+        $eventInfo = $this->events->document($request->event_id)->snapshot();
+//        return dd($request->email);
+        Mail::to($request->email)->send(new InvitationMail($eventInfo));
+        return view('mail.test');
     }
 
     public function showEventifAssistant($id){

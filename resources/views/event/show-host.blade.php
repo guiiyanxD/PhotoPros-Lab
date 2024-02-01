@@ -61,8 +61,15 @@
                         <div class="row pb-0">
                             <div class="col-md-12 ">
                                 <h5>
+
                                     <strong>Codigo Qr de ingreso al evento: </strong>
                                 </h5>
+                                <form action="{{route('event.email.invitation')}}" method="POST">
+                                    @csrf
+                                    <input name="event_id" type="text" value="{{$id}}" hidden>
+                                    <input name="email" type="email">
+                                    <button class="btn btn-success" type="submit"> Enviar correo</button>
+                                </form>
                                 <br>
                             </div>
                         </div>
@@ -122,6 +129,7 @@
                 </div>
             </div>
             <script>
+                //Enviar el correo
                 document.getElementById('descargarBtn').addEventListener('click', function() {
                     // Obtener la imagen como un Blob
                     var img = document.getElementById('miImagen');

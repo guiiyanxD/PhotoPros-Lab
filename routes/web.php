@@ -1,5 +1,7 @@
 <?php
 
+use Aws\Rekognition\RekognitionClient;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -61,6 +63,8 @@ Route::get('/events/show/{id}', [\App\Http\Controllers\EventController::class,'s
     ->name('event.show.attendant');
 Route::get('event/show/album/{event_id}',[\App\Http\Controllers\EventController::class,'showAlbum'])
     ->name('event.show.album');
+Route::post('event/email/invitation', [\App\Http\Controllers\EventController::class,'sendInvitationEmail'])
+    ->name('event.email.invitation');
 
 Route::post('/upload_album_event/process',[\App\Http\Controllers\EventController::class,'albumToProcess'])
     ->name('event.album_to_process');
@@ -80,3 +84,43 @@ Route::get('ph/show/events', [\App\Http\Controllers\PhController::class,'getEven
 Route::get('ph/look-for/events', [\App\Http\Controllers\PhController::class,'getEventsToRequest'])
     ->name('ph.lookFor.events');
 //Route::get('aux/ph/profile', [\App\Http\Controllers\PhController::class,'updateNoProfilePicture']);
+
+
+
+Route::get('listFaces', function(){
+    $client = new RekognitionClient([
+        'region' => env('AWS_DEFAULT_REGION'),
+        'version' => 'latest'
+    ]);
+
+    $result = $client->listFaces([
+        "CollectionId" => 'photoprosLab',
+        'MaxResults' => 25,
+    ]);
+    return dd($result);
+//    return view('test.listFaces');
+});
+
+Route::get('deleteFaces', function(){
+    $client = new RekognitionClient([
+        'region' => env('AWS_DEFAULT_REGION'),
+        'version' => 'latest'
+    ]);
+
+    $facesList = $client->listFaces([
+        "CollectionId" => 'photoprosLab',
+        'MaxResults' => 25,
+    ]);
+    $deletedFces = '';
+
+    foreach ($facesList['Faces'] as $face){
+        $faceId = $face['FaceId'];
+        $deletedFces = $client->deleteFaces([
+            'CollectionId' => 'photoprosLab',
+            'FaceIds' => [$faceId]
+        ]);
+    }
+
+    return dd($deletedFces);
+//    return view('test.listFaces');
+});
