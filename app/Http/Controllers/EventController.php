@@ -204,12 +204,12 @@ class EventController extends Controller
     }
 
     public function sendInvitationEmail(Request $request){
-//        Validator::make($request->all(), [
-//            'email' => ['required', 'string', 'email', 'max:255'],
-//        ]);
-//        $eventInfo = $this->events->document($request->event_id)->snapshot();
+        Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'max:255'],
+        ]);
+        $eventInfo = $this->events->document($request->event_id)->snapshot();
 //        return dd($request->email);
-//        Mail::to($request->email)->send(new InvitationMail($eventInfo));
+        Mail::to($request->email)->send(new InvitationMail($eventInfo));
         return view('mail.test');
     }
 

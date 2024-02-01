@@ -76,7 +76,7 @@
                         <div class="row pb-5 pt-0 ">
                             <div class="col-md-12 m-0 pt-0">
                                 <div class="">
-                                    {{QrCode::generate('Embed me into an e-mail!')}}
+                                    {{QrCode::generate('invitdado al evento')}}
                                     <a class="btn" role="button" id="descargarBtn">Descargar SVG</a>
                                 </div>
                             </div>

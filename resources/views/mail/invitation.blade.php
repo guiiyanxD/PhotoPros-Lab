@@ -8,6 +8,8 @@
     <title>Invitacion al evento</title>
 </head>
 <body>
-    Este correo se envio desde laravel {{$eventInfo->data()['name']}} . {{$eventInfo->data()['description']}}
+    Estas cordialmente invitado al evento: {{$eventInfo->data()['name']}} . {{$eventInfo->data()['description']}}
+    {{QrCode::generate('invitdado al evento')}}
+    
 </body>
 </html>
