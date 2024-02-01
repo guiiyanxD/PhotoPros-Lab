@@ -24,7 +24,10 @@ class UserController extends Controller
         $this->middleware('auth');
         $this->db = app('firebase.firestore')->database();
         $this->events = $this->db->collection('events');
+//        return dd(\Illuminate\Support\Facades\Session::get('localId'));
+
     }
+
 
     public function index(){
         $asAttendant = $this->getEventsAsAttendant();

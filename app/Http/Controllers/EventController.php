@@ -98,7 +98,7 @@ class EventController extends Controller
 
 //        $qr = QrCode::format('svg')->generate('Qr de prueba', );
 //        $code = Storage::disk('local')->put('qrCodes/'.$request->name.'/', $qr.'.svg');
-        return dd($existe, $uploaded);
+//        return dd($existe, $uploaded);
         try {
             $this->checkDates($request['date_event_ini'], $request['date_event_end']);
             $event = $this->events->add([
@@ -204,12 +204,12 @@ class EventController extends Controller
     }
 
     public function sendInvitationEmail(Request $request){
-        Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email', 'max:255'],
-        ]);
-        $eventInfo = $this->events->document($request->event_id)->snapshot();
+//        Validator::make($request->all(), [
+//            'email' => ['required', 'string', 'email', 'max:255'],
+//        ]);
+//        $eventInfo = $this->events->document($request->event_id)->snapshot();
 //        return dd($request->email);
-        Mail::to($request->email)->send(new InvitationMail($eventInfo));
+//        Mail::to($request->email)->send(new InvitationMail($eventInfo));
         return view('mail.test');
     }
 
@@ -264,7 +264,7 @@ class EventController extends Controller
             ]);
             $predicted = $predicted['FaceMatches'];
             $predicted = array_values($predicted);
-
+            return dd($predicted);
             //almacenar en una bd
 
 
@@ -322,7 +322,7 @@ class EventController extends Controller
 
         }
 
-        return redirect()->route('photographer.home.blade.php');//->with('status','Album subido exitosamente');
+        return redirect()->route('photographer.home');//->with('status','Album subido exitosamente');
     }
 
     public function showAlbum($eventId){

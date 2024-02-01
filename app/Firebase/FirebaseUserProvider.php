@@ -24,6 +24,7 @@ class FirebaseUserProvider implements UserProvider {
         ->document($firebaseUser->uid)
         ->snapshot()
         ->data();
+
     if( array_key_exists('is_photographer',$userInfo)){
         $user = new User([
             'localId' => $firebaseUser->uid,

@@ -33,7 +33,7 @@
                                 </div>
                                 <div>
                                     <div class="col-md-6">
-                                        <a type="button" href="{{route('photographer.home.blade.php')}}" class="btn btn-outline-danger">
+                                        <a type="button" href="{{route('photographer.home')}}" class="btn btn-outline-danger">
                                             Cancelar
                                         </a>
                                     </div>
